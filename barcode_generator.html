@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Barcode Generator</title>
+  </head>
+  <body>
+    <h1>Barcode Generator</h1>
+
+    <p>
+      JsBarcode is a powerful JavaScript barcode generator that supports multiple barcode formats.
+      It works in both web browsers and Node.js environments and can be used independently or with jQuery.
+    </p>
+
+    <!-- Input field for ISBN -->
+    <label for="isbn">Enter 13-digit ISBN:</label>
+    <input type="text" id="isbn" placeholder="Enter 13-digit ISBN" />
+
+    <!-- Button to generate the barcode -->
+    <button onclick="generateBarcode()">Generate Barcode</button>
+
+    <!-- Container to hold the generated barcode -->
+    <canvas id="barcode"></canvas>
+
+    <!-- Download link for the barcode -->
+    <a id="download-link" style="display: none" download="barcode.png"
+      >Download Barcode</a
+    >
+
+    <!-- Load the bwip-js library -->
+    <script src="JsBarcode.all.min.js"></script>
+
+    <script>
+      function generateBarcode() {
+        // Get the ISBN entered by the user
+        var isbn = document.getElementById("isbn").value;
+
+        // Check if the ISBN is 13 digits long
+        if (isbn.length !== 13) {
+          alert("Please enter a 13-digit ISBN.");
+          return;
+        }
+
+
+        // Select the container where the barcode will be displayed (canvas element)
+        var barcodeContainer = document.getElementById("barcode");
+
+        // Clear any previous barcode
+        barcodeContainer.innerHTML = "";
+
+        // Generate the barcode using JsBarcode
+        JsBarcode("#barcode")
+          .options({ font: "OCR-B" }) // Will affect all barcodes
+          .EAN13("1234567890128", { fontSize: 18, textMargin: 0 })
+          .blank(20) // Create space between the barcodes
+          .EAN5("12345", {
+            height: 85,
+            textPosition: "top",
+            fontSize: 16,
+            marginTop: 15,
+          })
+          .render();
+
+        // Show the download link
+        var downloadLink = document.getElementById("download-link");
+        downloadLink.href = barcodeContainer
+          .querySelector("canvas")
+          .toDataURL(); // Use toDataURL() for canvas
+        downloadLink.style.display = "block";
+      }
+    </script>
+  </body>
+</html>
